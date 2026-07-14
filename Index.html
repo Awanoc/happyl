@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Birthday Gift for Luna — July 19, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     CUSTOMIZE ME
+     - Change the celebrant's name in the HTML below (search for
+       "Luna") and in the JS CELEBRANT_NAME constant.
+     - The date is fixed to July 19, 2026 as requested — search
+       "July 19" to change it if needed.
+     ============================================================ */
+
+  :root{
+    --chocolate-deepest: #201009;
+    --chocolate-dark: #3B2417;
+    --mocha: #6B4423;
+    --caramel: #B8793E;
+    --gold: #D8A85B;
+    --gold-soft: #E7C793;
+    --cream: #F5E9D6;
+    --blush: #8B5A45;
+    --ember: #E29A4E;
+
+    --font-display: "Fraunces", serif;
+    --font-body: "Manrope", sans-serif;
+    --font-mono: "Space Mono", monospace;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html,body{ height:100%; }
+  body{
+    font-family: var(--font-body);
+    background: radial-gradient(ellipse at top, var(--chocolate-dark) 0%, var(--chocolate-deepest) 65%);
+    color: var(--cream);
+    overflow: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- ambient floating embers ---------- */
+  #embers{
+    position: fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden;
+  }
+  .ember{
+    position:absolute; bottom:-10px; border-radius:50%;
+    background: radial-gradient(circle, var(--gold-soft), var(--ember) 60%, transparent 70%);
+    opacity:.55;
+    animation: rise linear infinite;
+  }
+  @keyframes rise{
+    0%{ transform: translateY(0) translateX(0) scale(1); opacity:0; }
+    10%{ opacity:.6; }
+    90%{ opacity:.4; }
+    100%{ transform: translateY(-110vh) translateX(var(--drift,20px)) scale(.4); opacity:0; }
+  }
+
+  /* ---------- app shell ---------- */
+  .app{ position:relative; z-index:2; height:100vh; width:100vw; }
+
+  .track{
+    display:flex;
+    height:100%;
+    width:500%;
+    transform: translateX(0%);
+    transition: transform .75s cubic-bezier(.65,0,.35,1);
+  }
+
+  .slide{
+    width:20%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 6vh 6vw;
+    position:relative;
+  }
+
+  /* invitation card */
+  .card{
+    position:relative;
+    width:min(720px, 100%);
+    max-height: 84vh;
+    overflow-y:auto;
+    padding: 56px 48px;
+    background: linear-gradient(160deg, rgba(107,68,35,.35), rgba(32,16,9,.55));
+    border: 1px solid rgba(216,168,91,.35);
+    border-radius: 4px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  }
+  .card::before, .card::after{
+    content:"";
+    position:absolute; width:26px; height:26px;
+    border: 1.5px solid var(--gold);
+  }
+  .card::before{ top:14px; left:14px; border-right:none; border-bottom:none; }
+  .card::after{ bottom:14px; right:14px; border-left:none; border-top:none; }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 22px;
+  }
+  .eyebrow::before{
+    content:""; width:26px; height:1px; background: var(--gold); display:inline-block;
+  }
+
+  h1,h2{
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.05;
+    color: var(--cream);
+  }
+
+  h1{ font-size: clamp(42px, 7vw, 84px); font-style: italic; font-weight: 500; }
+  h2{ font-size: clamp(28px, 4vw, 44px); margin-bottom: 18px; }
+
+  p{ font-size: 16.5px; line-height: 1.75; color: rgba(245,233,214,.85); max-width: 58ch; }
+  p + p{ margin-top: 14px; }
+
+  .lede{ font-size: 19px; color: var(--gold-soft); margin-top: 18px; }
+
+  .datestamp{
+    display:inline-flex; align-items:center; gap:12px;
+    margin-top: 28px;
+    padding: 10px 18px;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: .12em;
+    color: var(--gold-soft);
+  }
+  .dot-live{
+    width:7px; height:7px; border-radius:50%; background: var(--ember);
+    box-shadow: 0 0 10px var(--ember);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{ opacity:1;} 50%{ opacity:.3;} }
+
+  .btn{
+    margin-top: 34px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14.5px;
+    letter-spacing:.02em;
+    color: var(--chocolate-deepest);
+    background: linear-gradient(120deg, var(--gold-soft), var(--gold));
+    border: none;
+    padding: 14px 28px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .25s ease;
+    box-shadow: 0 8px 24px rgba(216,168,91,.25);
+  }
+  .btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 30px rgba(216,168,91,.4); }
+  .btn:focus-visible{ outline: 2px solid var(--cream); outline-offset: 3px; }
+  .btn.ghost{
+    background: transparent;
+    color: var(--gold-soft);
+    border: 1px solid var(--gold);
+    box-shadow:none;
+  }
+
+  /* gratitude grid — slide 3 */
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 26px;
+  }
+  .tile{
+    border: 1px solid rgba(216,168,91,.3);
+    border-radius: 6px;
+    padding: 18px;
+    background: rgba(216,168,91,.06);
+  }
+  .tile .num{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: .1em;
+  }
+  .tile h3{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 20px;
+    margin: 6px 0 6px;
+    color: var(--gold-soft);
+  }
+  .tile p{ font-size: 14px; }
+
+  /* cake — slide 4 */
+  .cake-wrap{ display:flex; flex-direction:column; align-items:center; text-align:center; }
+  .cake-wrap p, .cake-wrap h2{ margin-left:auto; margin-right:auto; }
+  #cakeSvg{ width: min(260px, 70vw); height:auto; margin: 18px 0; cursor:pointer; }
+  .flame{ transform-origin: center bottom; animation: flicker 1.4s ease-in-out infinite; }
+  @keyframes flicker{
+    0%,100%{ transform: scaleY(1) translateX(0); }
+    50%{ transform: scaleY(1.15) translateX(1px); }
+  }
+  .flame.out{ animation:none; opacity:0; transition: opacity .4s ease; }
+  .hint{ font-family: var(--font-mono); font-size: 12px; color: var(--gold); letter-spacing:.08em; margin-top:6px; }
+  .wish-result{ font-family: var(--font-display); font-style:italic; font-size: 20px; color: var(--gold-soft); min-height: 30px; margin-top: 14px; opacity:0; transition: opacity .5s ease; }
+  .wish-result.show{ opacity:1; }
+
+  /* ---------- nav controls ---------- */
+  .arrow{
+    position:fixed; top:50%; transform: translateY(-50%);
+    z-index:5;
+    width:48px; height:48px;
+    border-radius:50%;
+    border: 1px solid rgba(216,168,91,.4);
+    background: rgba(32,16,9,.55);
+    color: var(--gold-soft);
+    font-size: 18px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    backdrop-filter: blur(4px);
+    transition: background .2s ease, transform .2s ease;
+  }
+  .arrow:hover{ background: rgba(107,68,35,.6); }
+  .arrow:focus-visible{ outline: 2px solid var(--cream); }
+  .arrow.left{ left: 20px; }
+  .arrow.right{ right: 20px; }
+  .arrow[disabled]{ opacity:.25; cursor:default; }
+  .arrow[disabled]:hover{ background: rgba(32,16,9,.55); }
+
+  .dots{
+    position:fixed; bottom: 26px; left:50%; transform: translateX(-50%);
+    z-index:5;
+    display:flex; gap:10px;
+    padding: 10px 16px;
+    background: rgba(32,16,9,.5);
+    border: 1px solid rgba(216,168,91,.3);
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+  }
+  .dots button{
+    width:9px; height:9px; border-radius:50%;
+    background: rgba(245,233,214,.3);
+    border:none; cursor:pointer; padding:0;
+    transition: background .25s ease, transform .25s ease;
+  }
+  .dots button.active{ background: var(--gold); transform: scale(1.3); }
+  .dots button:focus-visible{ outline: 2px solid var(--cream); }
+
+  .slidelabel{
+    position:fixed; top: 26px; left:50%; transform: translateX(-50%);
+    z-index:5;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing:.2em;
+    color: rgba(245,233,214,.55); text-transform:uppercase;
+  }
+
+  /* confetti canvas overlay */
+  #confetti{ position: fixed; inset:0; z-index:10; pointer-events:none; }
+
+  @media (max-width: 720px){
+    .grid{ grid-template-columns: 1fr; }
+    .card{ padding: 36px 26px; max-height: 78vh; }
+    .arrow{ width:40px; height:40px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .ember, .flame, .dot-live{ animation: none !important; }
+    .track{ transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="embers"></div>
+<canvas id="confetti"></canvas>
+
+<div class="slidelabel" id="slidelabel">Slide 01 / 05</div>
+
+<button class="arrow left" id="prevBtn" aria-label="Previous slide">&#8592;</button>
+<button class="arrow right" id="nextBtn" aria-label="Next slide">&#8594;</button>
+
+<div class="app">
+  <div class="track" id="track">
+
+    <!-- SLIDE 1 — HERO -->
+    <section class="slide">
+      <div class="card">
+        <div class="eyebrow">A Birthday Gift, Sent From Afar</div>
+        <h1>Happy Birthday,<br>Luna.</h1>
+        <p class="lede">One year older, immeasurably more wonderful.</p>
+        <p style="margin-top:16px;">The distance between us is far too great for me to be there in person — so this little online greeting is what I could give you instead. It isn't much, but every word of it is real, and it comes with all my love.</p>
+        <div class="datestamp"><span class="dot-live"></span> SUNDAY · JULY 19 · 2026</div>
+        <br>
+        <button class="btn" onclick="goTo(1)">Begin the Celebration &rarr;</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 2 — THE WISH -->
+    <section class="slide">
+      <div class="card">
+        <div class="eyebrow">A Little Note For You</div>
+        <h2>Here's to you.</h2>
+        <p>Today isn't just another day on the calendar — it's a celebration of every laugh you've shared, every hard thing you've carried with grace, and every small kindness that made someone else's day a little brighter.</p>
+        <p>May this new year of yours be warm like your favorite cup of coffee, rich like your best stories, and sweeter than the cake we're about to cut. You deserve every good thing coming your way.</p>
+        <p style="font-family: var(--font-display); font-style: italic; color: var(--gold-soft);">— Little Awan</p>
+        <button class="btn ghost" onclick="goTo(2)">Keep Reading &rarr;</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 3 — GRATITUDE GRID -->
+    <section class="slide">
+      <div class="card">
+        <div class="eyebrow">Reasons To Celebrate You</div>
+        <h2>A few things worth toasting to.</h2>
+        <div class="grid">
+          <div class="tile">
+            <div class="num">01</div>
+            <h3>Your warmth</h3>
+            <p>The way you make ordinary moments feel like they matter.</p>
+          </div>
+          <div class="tile">
+            <div class="num">02</div>
+            <h3>Your resilience</h3>
+            <p>Every challenge this year met by someone who kept showing up.</p>
+          </div>
+          <div class="tile">
+            <div class="num">03</div>
+            <h3>Your humor</h3>
+            <p>Even on hard days, you find a reason to laugh — and to make others laugh too.</p>
+          </div>
+          <div class="tile">
+            <div class="num">04</div>
+            <h3>Your heart</h3>
+            <p>Generous in ways big and small, often when no one's watching.</p>
+          </div>
+        </div>
+        <button class="btn" onclick="goTo(3)">One More Thing &rarr;</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 4 — MAKE A WISH (INTERACTIVE CAKE) -->
+    <section class="slide">
+      <div class="card cake-wrap">
+        <div class="eyebrow">The Main Event</div>
+        <h2>Make a wish.</h2>
+        <p>Tap the candles to blow them out.</p>
+
+        <svg id="cakeSvg" viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg" role="button" aria-label="Blow out the candles">
+          <!-- plate -->
+          <ellipse cx="120" cy="200" rx="95" ry="10" fill="#4A2C1A"/>
+          <!-- bottom tier -->
+          <rect x="35" y="140" width="170" height="55" rx="6" fill="#6B4423"/>
+          <rect x="35" y="140" width="170" height="12" fill="#8B5A45"/>
+          <!-- middle tier -->
+          <rect x="55" y="105" width="130" height="40" rx="6" fill="#8B5A45"/>
+          <rect x="55" y="105" width="130" height="10" fill="#B8793E"/>
+          <!-- top tier -->
+          <rect x="75" y="75" width="90" height="35" rx="6" fill="#B8793E"/>
+          <rect x="75" y="75" width="90" height="9" fill="#D8A85B"/>
+          <!-- drizzle -->
+          <path d="M55 105 Q65 120 55 140 M100 105 Q110 120 100 140 M150 105 Q160 120 150 140 M185 105 Q175 120 185 140" stroke="#3B2417" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
+          <!-- candles -->
+          <g class="candle-group">
+            <rect x="95" y="50" width="6" height="26" fill="#F5E9D6"/>
+            <g class="flame-g"><path class="flame" d="M98 50 C92 44 92 36 98 30 C104 36 104 44 98 50 Z" fill="#E29A4E"/></g>
+          </g>
+          <g class="candle-group">
+            <rect x="117" y="45" width="6" height="31" fill="#F5E9D6"/>
+            <g class="flame-g"><path class="flame" d="M120 45 C114 39 114 31 120 25 C126 31 126 39 120 45 Z" fill="#D8A85B"/></g>
+          </g>
+          <g class="candle-group">
+            <rect x="139" y="50" width="6" height="26" fill="#F5E9D6"/>
+            <g class="flame-g"><path class="flame" d="M142 50 C136 44 136 36 142 30 C148 36 148 44 142 50 Z" fill="#E29A4E"/></g>
+          </g>
+        </svg>
+
+        <div class="hint" id="cakeHint">TAP THE CAKE</div>
+        <div class="wish-result" id="wishResult">Wish granted. Probably. 🎉</div>
+        <button class="btn" onclick="goTo(4)" style="margin-top:20px;">Almost Done &rarr;</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 5 — CLOSING -->
+    <section class="slide">
+      <div class="card">
+        <div class="eyebrow">My Gift To You</div>
+        <h2>Here's to another golden year.</h2>
+        <p>Thank you for being exactly who you are — today, and every day since we've known you. Go eat too much cake, stay up too late, and celebrate yourself as loudly as everyone here celebrates you.</p>
+        <p>I couldn't be there to hand you a present, so I built you this instead — a small online greeting, from wherever I am to wherever you are.</p>
+        <p class="lede">Happy Birthday. We're so glad you were born.</p>
+        <div class="datestamp"><span class="dot-live"></span> JULY 19 · 2026</div>
+        <p style="margin-top:26px; font-family: var(--font-display); font-style: italic; font-size:19px; color: var(--gold-soft);">With all my love, — Little Awan</p>
+        <br>
+        <button class="btn" onclick="burstConfetti(); goTo(0)">Celebrate Again &rarr;</button>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="dots" id="dots"></div>
+
+<script>
+  /* ================= CUSTOMIZE ================= */
+  const CELEBRANT_NAME = "Luna"; // change this + the h1 text above
+  const TOTAL_SLIDES = 5;
+  /* =============================================== */
+
+  let current = 0;
+  const track = document.getElementById('track');
+  const dotsWrap = document.getElementById('dots');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const label = document.getElementById('slidelabel');
+
+  for(let i=0;i<TOTAL_SLIDES;i++){
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'Go to slide ' + (i+1));
+    if(i===0) b.classList.add('active');
+    b.addEventListener('click', ()=>goTo(i));
+    dotsWrap.appendChild(b);
+  }
+
+  function render(){
+    track.style.transform = `translateX(-${current * 20}%)`;
+    [...dotsWrap.children].forEach((d,i)=>d.classList.toggle('active', i===current));
+    prevBtn.disabled = current===0;
+    nextBtn.disabled = current===TOTAL_SLIDES-1;
+    label.textContent = `Slide ${String(current+1).padStart(2,'0')} / ${String(TOTAL_SLIDES).padStart(2,'0')}`;
+  }
+
+  function goTo(i){
+    current = Math.max(0, Math.min(TOTAL_SLIDES-1, i));
+    render();
+  }
+
+  prevBtn.addEventListener('click', ()=>goTo(current-1));
+  nextBtn.addEventListener('click', ()=>goTo(current+1));
+
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowRight') goTo(current+1);
+    if(e.key === 'ArrowLeft') goTo(current-1);
+  });
+
+  // touch swipe
+  let touchStartX = null;
+  window.addEventListener('touchstart', e=>{ touchStartX = e.touches[0].clientX; }, {passive:true});
+  window.addEventListener('touchend', e=>{
+    if(touchStartX===null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if(dx > 50) goTo(current-1);
+    if(dx < -50) goTo(current+1);
+    touchStartX = null;
+  }, {passive:true});
+
+  render();
+
+  // ---------- ambient embers ----------
+  const embersEl = document.getElementById('embers');
+  const EMBER_COUNT = 26;
+  for(let i=0;i<EMBER_COUNT;i++){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const size = 3 + Math.random()*6;
+    e.style.width = size+'px';
+    e.style.height = size+'px';
+    e.style.left = Math.random()*100+'vw';
+    e.style.setProperty('--drift', (Math.random()*60-30)+'px');
+    e.style.animationDuration = (8 + Math.random()*10)+'s';
+    e.style.animationDelay = (Math.random()*10)+'s';
+    embersEl.appendChild(e);
+  }
+
+  // ---------- cake interaction ----------
+  const cakeSvg = document.getElementById('cakeSvg');
+  const cakeHint = document.getElementById('cakeHint');
+  const wishResult = document.getElementById('wishResult');
+  let blownOut = false;
+
+  cakeSvg.addEventListener('click', ()=>{
+    if(blownOut) return;
+    blownOut = true;
+    document.querySelectorAll('.flame').forEach(f=>f.classList.add('out'));
+    cakeHint.textContent = 'CANDLES OUT';
+    wishResult.classList.add('show');
+    burstConfetti();
+  });
+
+  // ---------- confetti ----------
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const colors = ['#D8A85B','#E29A4E','#B8793E','#F5E9D6','#8B5A45'];
+  let particles = [];
+
+  function burstConfetti(){
+    const cx = canvas.width/2, cy = canvas.height/2;
+    for(let i=0;i<90;i++){
+      particles.push({
+        x: cx, y: cy,
+        vx: (Math.random()-0.5)*10,
+        vy: (Math.random()-1.2)*10,
+        size: 4+Math.random()*5,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        rot: Math.random()*360,
+        vr: (Math.random()-0.5)*10,
+        life: 0
+      });
+    }
+    if(!animating) animate();
+  }
+
+  let animating = false;
+  function animate(){
+    animating = true;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.vy += 0.25;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.life++;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+      ctx.restore();
+    });
+    particles = particles.filter(p => p.y < canvas.height + 40 && p.life < 240);
+    if(particles.length>0){
+      requestAnimationFrame(animate);
+    } else {
+      animating = false;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+  }
+</script>
+
+</body>
+</html>
